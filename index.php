@@ -1,50 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NyCakeu - Dessert shop based in Medan</title>
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<?php
+session_start();
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+if(!isset($_SESSION['login'])){
+    header("Location: login.php");
+    exit();
+}
+?>
 
-    <link rel="stylesheet" href="nycakeu.css">
-</head>
+<?php require 'partials/header.php'; ?>
+<?php require 'partials/nav.php'; ?>
 
-<body data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="50">
-
-  
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top" id="mainNav">
-        <div class="container">
-            <a class="navbar-brand" href="#home">NyCakeu</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            
-            <li class="nav-item position-relative">
-                <a class="nav-link" href="#">
-                    <i class="fa fa-shopping-cart"></i>
-                    <span id="cartCount" class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">0</span>
-                </a>
-            </li>
-
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#portfolio">Our Cakes</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    
-    <section id="home" class="hero-section text-center">
+<section id="home" class="hero-section text-center">
         <div class="container">
             <h1 class="display-3 fw-bold">WELCOME TO OUR HOMECAFE</h1>
             <p class="lead mb-5">Taste the deliciousness of our handcrafted desserts and drinks.</p>
@@ -53,10 +19,10 @@
 
     <section id="about" class="about-section py-5">
         <div class="container">
-            <h2 class="text-center mb-5">About NyCakeu</h2>
+            <h2 class="text-center mb-5">About Ny.Cakeu</h2>
             <div class="row justify-content-center">
                 <div class="col-md-8 text-center">
-                    <p><strong>NyCakeu is a homecafé that has been serving handcrafted desserts and drinks since 2021.</strong> Made with love in every process, we focus on quality, comfort, and authenticity.</p>
+                    <p><strong>Ny.Cakeu is a homecafé that has been serving handcrafted desserts and drinks since 2021.</strong> Made with love in every process, we focus on quality, comfort, and authenticity.</p>
                     <p>All of our products are freshly made <strong>without preservatives</strong>, so you can enjoy every bite with peace of mind.</p>
                 </div>
             </div>
@@ -208,25 +174,5 @@
         </div>
     </section>
 
-    <footer class="footer-custom mt-5">
-        <div class="container">
-            <p>&copy; 2023 NyCakeu. Created with love. <i class="fas fa-heart"></i></p>
-        </div>
-    </footer>
-
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="submitToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-               <div class="toast-body">
-                   Pesan Anda telah terkirim! Keranjang belanja telah direset.
-                 </div>
-                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-       </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="nycakeu.js"></script>
-
-</body>
-</html>
+<?php require 'partials/footer.php'; ?>
+<?php require 'partials/scripts.php'; ?>

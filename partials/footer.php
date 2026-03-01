@@ -1,6 +1,6 @@
 <footer class="footer-custom mt-5">
         <div class="container">
-            <p>&copy; 2023 NyCakeu. Created with love. <i class="fas fa-heart"></i></p>
+            <p>&copy; 2023 Ny.Cakeu, Created with love. <i class="fas fa-heart"></i></p>
         </div>
 </footer>
 
