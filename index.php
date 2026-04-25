@@ -1,178 +1,204 @@
 <?php
 session_start();
+include 'config/database.php';
 
-if(!isset($_SESSION['login'])){
-    header("Location: login.php");
-    exit();
+$added = false;
+
+if(isset($_POST['product_id'])){
+    $_SESSION['cart'][$_POST['product_id']] =
+    ($_SESSION['cart'][$_POST['product_id']] ?? 0) + 1;
+
+    $added = true;
 }
+
+include 'includes/navbar.php';
 ?>
 
-<?php require 'partials/header.php'; ?>
-<?php require 'partials/nav.php'; ?>
+<?php if($added): ?>
+<div class="notif show">
+    ✅ Added to cart!
+</div>
+<?php endif; ?>
 
-<section id="home" class="hero-section text-center">
-        <div class="container">
-            <h1 class="display-3 fw-bold">WELCOME TO OUR HOMECAFE</h1>
-            <p class="lead mb-5">Taste the deliciousness of our handcrafted desserts and drinks.</p>
-        </div>
-    </section>
+<div id="top"></div>
 
-    <section id="about" class="about-section py-5">
-        <div class="container">
-            <h2 class="text-center mb-5">About Ny.Cakeu</h2>
-            <div class="row justify-content-center">
-                <div class="col-md-8 text-center">
-                    <p><strong>Ny.Cakeu is a homecafé that has been serving handcrafted desserts and drinks since 2021.</strong> Made with love in every process, we focus on quality, comfort, and authenticity.</p>
-                    <p>All of our products are freshly made <strong>without preservatives</strong>, so you can enjoy every bite with peace of mind.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<?php if(isset($_GET['success'])): ?>
+<div class="notif-success">
+    🎉 Order berhasil!
+</div>
+<?php endif; ?>
 
-    <section id="call-us" class="call-us-section py-5 text-center">
-        <div class="container">
-            <h2>Need a Quick Order? Call Us!</h2>
-            <p class="lead">We are ready to take your orders now.</p>
-            <a href="tel:+628123456789" class="btn btn-lg btn-primary btn-call-now shadow-lg">
-                <i class="fas fa-phone-alt me-2"></i> Call Now (+62 812-3456-789)
-            </a>
-            <p class="mt-3 text-muted">Available from 9 AM to 9 PM (WIB)</p>
-        </div>
-    </section>
+<!-- HERO -->
+<div class="hero">
+    <h1>WELCOME TO OUR HOMECAFE</h1>
+    <p>Taste the deliciousness of our handcrafted desserts and drinks.</p>
+</div>
 
-   
-    <section id="portfolio" class="portfolio-section py-5">
-        <div class="container">
-            <h2 class="text-center mb-5">Dessert</h2>
+<!-- ABOUT -->
+<div class="about">
+    <h2>About Ny.Cakeu</h2>
+    <div class="section-line"></div>
+    <p>
+        Ny.Cakeu is a homecafé that has been serving handcrafted desserts and drinks since 2021.
+        Made with love in every process, we focus on quality, comfort, and authenticity.
+    </p>
+    <p>
+        All of our products are freshly made <b>without preservatives</b>, so you can enjoy every bite with peace of mind.
+    </p>
+</div>
 
-            <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-0">
-                        <img src="cheesecake.jpg" class="card-img-top" alt="Burnt Cheesecake Original">
-                        <div class="card-body">
-                            <h5 class="card-title">Burnt Cheesecake OG</h5>
-                            <p class="card-text">Creamy layers with a gentle richness.</p>
-                            <div class="product-price">Rp 45.000</div>
-                            <button class="btn btn-primary w-100 add-to-cart" data-name="Burnt Cheesecake OG" data-price="45000">
-                                <i class="fa-solid fa-cart-shopping"></i> Add to Cart
-                            </button>
-                        </div>
-                    </div>
-                </div>
+<!-- CALL -->
+<div class="call">
+    <h2>Need a Quick Order? Call Us!</h2>
+    <p>We are ready to take your orders now.</p>
 
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-0">
-                        <img src="cookies.jpg" class="card-img-top" alt="Freshly Baked Cookies">
-                        <div class="card-body">
-                            <h5 class="card-title">Cookies</h5>
-                            <p class="card-text">Freshly baked soft cookies.</p>
-                            <div class="product-price">Rp 12.000</div>
-                            <button class="btn btn-primary w-100 add-to-cart" data-name="Cookies" data-price="12000">
-                                <i class="fa-solid fa-cart-shopping"></i> Add to Cart
-                            </button>
-                        </div>
-                    </div>
-                </div>
+    <a class="btn" 
+    href="https://wa.me/628123456789?text=Halo%20Ny.Cakeu,%20saya%20ingin%20order!" 
+    target="_blank">
+    💬 Order now via WhatsApp
+    </a>
 
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-0">
-                        <img src="chocolate.jpg" class="card-img-top" alt="Chocolate Fudge Cake">
-                        <div class="card-body">
-                            <h5 class="card-title">Chocolate Fudge Decadence</h5>
-                            <p class="card-text">Rich cake with fudge frosting.</p>
-                            <div class="product-price">Rp 47.000</div>
-                            <button class="btn btn-primary w-100 add-to-cart" data-name="Chocolate Fudge" data-price="47000">
-                                <i class="fa-solid fa-cart-shopping"></i> Add to Cart
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <p class="time">Available from 9 AM to 9 PM (WIB)</p>
+</div>
 
-          
-            <h2 class="text-center my-5">Drinks</h2>
+<?php if(isset($_SESSION['user']) && $_SESSION['user']['role']=='admin'): ?>
 
-            <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-0">
-                        <img src="matcha.jpg" class="card-img-top" alt="Matcha Latte">
-                        <div class="card-body">
-                            <h5 class="card-title">Matcha Latte</h5>
-                            <p class="card-text">Ceremonial-grade matcha with milk.</p>
-                            <div class="product-price">Rp 45.000</div>
-                            <button class="btn btn-primary w-100 add-to-cart" data-name="Matcha Latte" data-price="45000">
-                                <i class="fa-solid fa-cart-shopping"></i> Add to Cart
-                            </button>
-                        </div>
-                    </div>
-                </div>
+<!-- 👑 ADMIN VIEW -->
+<h2 class="section-title">Products</h2>
+<div class="products">
 
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-0">
-                        <img src="coffee.jpg" class="card-img-top" alt="Coffee Latte">
-                        <div class="card-body">
-                            <h5 class="card-title">Coffee Latte</h5>
-                            <p class="card-text">Smooth espresso with milk.</p>
-                            <div class="product-price">Rp 32.000</div>
-                            <button class="btn btn-primary w-100 add-to-cart" data-name="Coffee Latte" data-price="32000">
-                                <i class="fa-solid fa-cart-shopping"></i> Add to Cart
-                            </button>
-                        </div>
-                    </div>
-                </div>
+<?php
+$q = mysqli_query($conn,"SELECT * FROM products");
+while($p=mysqli_fetch_assoc($q)){
+?>
+<div class="card">
+<img src="uploads/<?= $p['image']; ?>">
 
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-0">
-                        <img src="hot_chocolate.jpg" class="card-img-top" alt="Premium Chocolate Latte">
-                        <div class="card-body">
-                            <h5 class="card-title">Premium Chocolate Latte</h5>
-                            <p class="card-text">Velvety premium cocoa blend.</p>
-                            <div class="product-price">Rp 45.000</div>
-                            <button class="btn btn-primary w-100 add-to-cart" data-name="Premium Chocolate Latte" data-price="45000">
-                                <i class="fa-solid fa-cart-shopping"></i> Add to Cart
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="card-body">
+<h3><?= $p['name']; ?></h3>
+<p><?= $p['description']; ?></p>
 
-        </div>
-    </section>
+<div class="price">
+Rp <?= number_format($p['price'],0,',','.'); ?>
+</div>
 
-    
-    <section id="contact" class="contact-section py-5">
-        <div class="container">
-            <h2 class="text-center mb-5">Contact Us</h2>
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <form id="contactForm" class="p-4 border rounded shadow-sm">
-                        <div class="mb-3">
-                            <label class="form-label">Full Name</label>
-                            <input type="text" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Message / Address</label>
-                            <textarea class="form-control" rows="5" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-kirim w-100">Send Message</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+<div style="margin-top:10px;">
+    <a href="admin/edit_product.php?id=<?= $p['id']; ?>" class="btn">Edit</a>
+    <a href="admin/delete_product.php?id=<?= $p['id']; ?>" class="btn">Delete</a>
+</div>
 
+</div>
+</div>
+<?php } ?>
 
-    <section id="cart" class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-4">Your Cart 🛍</h2>
-            <ul id="cartItems" class="list-group mb-3"></ul>
-            <p class="fw-bold text-end fs-5">Total: <span id="cartTotal">Rp 0</span></p>
-        </div>
-    </section>
+</div>
 
-<?php require 'partials/footer.php'; ?>
-<?php require 'partials/scripts.php'; ?>
+<?php else: ?>
+
+<!-- 👤 USER VIEW -->
+
+<!-- DRINKS -->
+<h2 class="section-title" id="drinks">Drinks</h2>
+<div class="products">
+<?php
+$q = mysqli_query($conn,"SELECT * FROM products WHERE category='drink'");
+while($p=mysqli_fetch_assoc($q)){
+?>
+<div class="card">
+<img src="uploads/<?= $p['image']; ?>">
+<div class="card-body">
+<h3><?= $p['name']; ?></h3>
+<p><?= $p['description']; ?></p>
+<div class="price">Rp <?= number_format($p['price'],0,',','.'); ?></div>
+
+<form method="POST" action="#drinks">
+    <input type="hidden" name="product_id" value="<?= $p['id']; ?>">
+    <button class="btn">Add</button>
+</form>
+
+</div>
+</div>
+<?php } ?>
+</div>
+
+<!-- DESSERT -->
+<h2 class="section-title" id="dessert">Dessert</h2>
+<div class="products">
+<?php
+$q = mysqli_query($conn,"SELECT * FROM products WHERE category='dessert'");
+while($p=mysqli_fetch_assoc($q)){
+?>
+<div class="card">
+<img src="uploads/<?= $p['image']; ?>">
+<div class="card-body">
+<h3><?= $p['name']; ?></h3>
+<p><?= $p['description']; ?></p>
+<div class="price">Rp <?= number_format($p['price'],0,',','.'); ?></div>
+
+<form method="POST" action="#dessert">
+    <input type="hidden" name="product_id" value="<?= $p['id']; ?>">
+    <button class="btn">Add</button>
+</form>
+
+</div>
+</div>
+<?php } ?>
+</div>
+
+<?php endif; ?>
+
+<!-- notif auto hide -->
+<script>
+setTimeout(() => {
+    const notif = document.querySelector(".notif");
+    if(notif){
+        notif.classList.remove("show");
+    }
+}, 2000);
+</script>
+
+<script>
+const isAdmin = <?= (isset($_SESSION['user']) && $_SESSION['user']['role']=='admin') ? 'true' : 'false' ?>;
+
+// 🚫 kalau admin → jangan jalanin JS
+if(!isAdmin){
+
+    const home = document.querySelector(".nav-home");
+    const drinks = document.querySelector(".nav-drinks");
+    const dessert = document.querySelector(".nav-dessert");
+
+    const drinksSection = document.getElementById("drinks");
+    const dessertSection = document.getElementById("dessert");
+
+    function setActive(menu){
+        home.classList.remove("active");
+        drinks.classList.remove("active");
+        dessert.classList.remove("active");
+
+        if(menu === "home") home.classList.add("active");
+        if(menu === "drinks") drinks.classList.add("active");
+        if(menu === "dessert") dessert.classList.add("active");
+    }
+
+    // 🔥 CLICK NAVBAR
+    home.addEventListener("click", () => setActive("home"));
+    drinks.addEventListener("click", () => setActive("drinks"));
+    dessert.addEventListener("click", () => setActive("dessert"));
+
+    // 🔥 SCROLL DETECTION
+    window.addEventListener("scroll", () => {
+        let scrollPos = window.scrollY + 150;
+
+        if(scrollPos >= dessertSection.offsetTop){
+            setActive("dessert");
+        } 
+        else if(scrollPos >= drinksSection.offsetTop){
+            setActive("drinks");
+        } 
+        else {
+            setActive("home");
+        }
+    });
+
+}
+</script>
