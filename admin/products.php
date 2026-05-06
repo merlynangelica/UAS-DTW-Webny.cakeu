@@ -19,6 +19,7 @@ $q = mysqli_query($conn,"SELECT * FROM products");
 <div class="card-body">
 <h3><?= $p['name']; ?></h3>
 <p><?= $p['description']; ?></p>
+<p><b>Stock:</b> <?= $p['stock']; ?></p>
 
 <div class="price">
 Rp <?= number_format($p['price'],0,',','.'); ?>
@@ -27,6 +28,7 @@ Rp <?= number_format($p['price'],0,',','.'); ?>
 <div style="margin-top:10px;">
     <a href="edit_product.php?id=<?= $p['id']; ?>" class="btn">Edit</a>
     <a href="delete_product.php?id=<?= $p['id']; ?>" class="btn">Delete</a>
+    <a href="add_stock.php?id=<?= $p['id']; ?>" class="btn">+ Stock</a>
 </div>
 
 </div>

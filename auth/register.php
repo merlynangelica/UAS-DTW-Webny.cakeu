@@ -5,7 +5,7 @@ include '../config/database.php';
 if(isset($_POST['register'])){
     $name = $_POST['name'];
     $email = $_POST['email'];
-    $password = md5($_POST['password']);
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
     $cek = mysqli_query($conn,"SELECT * FROM users WHERE email='$email'");
     
@@ -14,8 +14,17 @@ if(isset($_POST['register'])){
     } else {
         mysqli_query($conn,"INSERT INTO users(name,email,password)
         VALUES('$name','$email','$password')");
-        
-        header("Location: login.php");
+
+        $id = mysqli_insert_id($conn);
+
+        $_SESSION['user'] = [
+            'id' => $id,
+            'name' => $name,
+            'email' => $email,
+            'role' => 'user'
+        ];
+
+        header("Location: ../index.php");
         exit;
     }
 }

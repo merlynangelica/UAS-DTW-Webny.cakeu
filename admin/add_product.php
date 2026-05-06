@@ -7,12 +7,13 @@ if(isset($_POST['add'])){
     $price = $_POST['price'];
     $desc = $_POST['description'];
     $cat = $_POST['category'];
+    $stock = $_POST['stock'];
 
     $img = $_FILES['image']['name'];
     move_uploaded_file($_FILES['image']['tmp_name'],"../uploads/".$img);
 
-    mysqli_query($conn,"INSERT INTO products(name,price,description,category,image)
-    VALUES('$name','$price','$desc','$cat','$img')");
+    mysqli_query($conn,"INSERT INTO products(name,price,description,category,image,stock)
+    VALUES('$name','$price','$desc','$cat','$img','$stock')");
 
     header("Location: products.php");
 }
@@ -23,7 +24,8 @@ if(isset($_POST['add'])){
 <form method="POST" enctype="multipart/form-data">
 <input name="name" placeholder="Nama Produk">
 <input name="price" placeholder="Harga">
-<textarea name="description"></textarea>
+<input name="description" placeholder="Description">
+<input type="number" name="stock" placeholder="Stock" required>
 
 <select name="category">
 <option value="drink">Drink</option>

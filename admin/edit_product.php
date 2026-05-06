@@ -9,11 +9,13 @@ if(isset($_POST['update'])){
     $name = $_POST['name'];
     $price = $_POST['price'];
     $desc = $_POST['description'];
+    $stock = $_POST['stock'];
 
     mysqli_query($conn,"UPDATE products SET 
     name='$name',
     price='$price',
-    description='$desc'
+    description='$desc',
+    stock='$stock'
     WHERE id=$id");
 
     header("Location: products.php");
@@ -25,7 +27,8 @@ if(isset($_POST['update'])){
 <form method="POST">
 <input name="name" value="<?= $p['name']; ?>">
 <input name="price" value="<?= $p['price']; ?>">
-<textarea name="description"><?= $p['description']; ?></textarea>
+<input name="description" value="<?= $p['description']; ?>">
+<input type="number" name="stock" value="<?= $p['stock']; ?>">
 
 <button class="btn" name="update">Update</button>
 </form>

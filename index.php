@@ -82,9 +82,12 @@ while($p=mysqli_fetch_assoc($q)){
 Rp <?= number_format($p['price'],0,',','.'); ?>
 </div>
 
+<p><b>Stock:</b> <?= $p['stock']; ?></p>
+
 <div style="margin-top:10px;">
     <a href="admin/edit_product.php?id=<?= $p['id']; ?>" class="btn">Edit</a>
     <a href="admin/delete_product.php?id=<?= $p['id']; ?>" class="btn">Delete</a>
+    <a href="admin/add_stock.php?id=<?= $p['id']; ?>" class="btn">+ Stock</a>
 </div>
 
 </div>
@@ -107,14 +110,26 @@ while($p=mysqli_fetch_assoc($q)){
 <div class="card">
 <img src="uploads/<?= $p['image']; ?>">
 <div class="card-body">
+
 <h3><?= $p['name']; ?></h3>
 <p><?= $p['description']; ?></p>
-<div class="price">Rp <?= number_format($p['price'],0,',','.'); ?></div>
 
+<div class="price">
+Rp <?= number_format($p['price'],0,',','.'); ?>
+</div>
+
+<p>Stock: <?= $p['stock']; ?></p>
+
+<?php if($p['stock'] > 0): ?>
 <form method="POST" action="#drinks">
     <input type="hidden" name="product_id" value="<?= $p['id']; ?>">
     <button class="btn">Add</button>
 </form>
+<?php else: ?>
+<button class="btn" disabled style="background: gray;">
+    Out of Stock
+</button>
+<?php endif; ?>
 
 </div>
 </div>
@@ -131,14 +146,26 @@ while($p=mysqli_fetch_assoc($q)){
 <div class="card">
 <img src="uploads/<?= $p['image']; ?>">
 <div class="card-body">
+
 <h3><?= $p['name']; ?></h3>
 <p><?= $p['description']; ?></p>
-<div class="price">Rp <?= number_format($p['price'],0,',','.'); ?></div>
 
+<div class="price">
+Rp <?= number_format($p['price'],0,',','.'); ?>
+</div>
+
+<p>Stock: <?= $p['stock']; ?></p>
+
+<?php if($p['stock'] > 0): ?>
 <form method="POST" action="#dessert">
     <input type="hidden" name="product_id" value="<?= $p['id']; ?>">
     <button class="btn">Add</button>
 </form>
+<?php else: ?>
+<button class="btn" disabled style="background: gray;">
+    Out of Stock
+</button>
+<?php endif; ?>
 
 </div>
 </div>
@@ -160,7 +187,6 @@ setTimeout(() => {
 <script>
 const isAdmin = <?= (isset($_SESSION['user']) && $_SESSION['user']['role']=='admin') ? 'true' : 'false' ?>;
 
-// 🚫 kalau admin → jangan jalanin JS
 if(!isAdmin){
 
     const home = document.querySelector(".nav-home");
@@ -180,12 +206,10 @@ if(!isAdmin){
         if(menu === "dessert") dessert.classList.add("active");
     }
 
-    // 🔥 CLICK NAVBAR
     home.addEventListener("click", () => setActive("home"));
     drinks.addEventListener("click", () => setActive("drinks"));
     dessert.addEventListener("click", () => setActive("dessert"));
 
-    // 🔥 SCROLL DETECTION
     window.addEventListener("scroll", () => {
         let scrollPos = window.scrollY + 150;
 

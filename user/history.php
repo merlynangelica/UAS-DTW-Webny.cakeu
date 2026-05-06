@@ -14,7 +14,7 @@ $q = mysqli_query($conn,"SELECT * FROM orders WHERE user_id=".$_SESSION['user'][
 
 <div class="order-card">
 
-<h3>Order <?= $o['id']; ?></h3>
+<h3>Your Order</h3>
 
 <!-- PRODUK -->
 <?php
@@ -40,16 +40,21 @@ while($i=mysqli_fetch_assoc($items)){
 <?php endif; ?>
 
 <?php
-// 🔥 WARNA STATUS (FIX)
 $status = $o['shipping_status'];
 
 if($status == "Pending"){
     $color = "orange";
-} elseif($status == "Confirmed"){
+} 
+elseif($status == "Confirmed"){
     $color = "blue";
-} elseif($status == "Completed"){
+} 
+elseif($status == "Completed"){
     $color = "green";
-} else {
+}
+elseif($status == "Delivered"){
+    $color = "purple";
+}
+else {
     $color = "black";
 }
 ?>

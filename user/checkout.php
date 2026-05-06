@@ -22,12 +22,16 @@ if(isset($_POST['checkout'])){
 
         $total = 0;
 
-        // 🔥 HITUNG TOTAL (AMAN)
+        // 🔥 VALIDASI STOCK + HITUNG TOTAL
         foreach($_SESSION['cart'] as $id => $qty){
             $p = mysqli_fetch_assoc(mysqli_query($conn,"SELECT * FROM products WHERE id=$id"));
-            if($p){
-                $total += $p['price'] * $qty;
+
+            if(!$p || $p['stock'] < $qty){
+                echo "<script>alert('Stock tidak cukup!'); window.location='cart.php';</script>";
+                exit;
             }
+
+            $total += $p['price'] * $qty;
         }
 
         $status = "Pending";
@@ -38,15 +42,17 @@ if(isset($_POST['checkout'])){
 
         $order_id = mysqli_insert_id($conn);
 
-        // 🔥 INSERT ITEMS (VALIDASI)
+        // 🔥 INSERT ITEM + KURANGI STOCK
         foreach($_SESSION['cart'] as $id => $qty){
-            if($qty > 0){
-                mysqli_query($conn,"INSERT INTO order_items(order_id, product_id, qty)
-                VALUES('$order_id','$id','$qty')");
-            }
+
+            mysqli_query($conn,"INSERT INTO order_items(order_id, product_id, qty)
+            VALUES('$order_id','$id','$qty')");
+
+            mysqli_query($conn,"UPDATE products 
+            SET stock = stock - $qty 
+            WHERE id = $id");
         }
 
-        // 🔥 RESET SESSION (PENTING)
         unset($_SESSION['cart']);
         unset($_SESSION['message']);
 
@@ -60,7 +66,6 @@ if(isset($_POST['checkout'])){
 
 <h2 class="section-title">Checkout</h2>
 
-<!-- LIST CART -->
 <?php
 $total = 0;
 
@@ -70,31 +75,27 @@ foreach($_SESSION['cart'] as $id => $qty){
         $sub = $p['price'] * $qty;
         $total += $sub;
 ?>
-    <p><?= $p['name']; ?> x <?= $qty; ?> = Rp <?= number_format($sub,0,',','.'); ?></p>
-<?php
-    }
-}
-?>
+<p><?= $p['name']; ?> x <?= $qty; ?> = Rp <?= number_format($sub,0,',','.'); ?></p>
+<?php } } ?>
 
 <h3>Total: Rp <?= number_format($total,0,',','.'); ?></h3>
 
 <form method="POST">
-    <textarea name="address" placeholder="Alamat" required></textarea>
+<textarea name="address" placeholder="Alamat" required></textarea>
 
-    <label class="input-label">Payment :</label>
-    
-    <select name="payment" id="payment">
-        <option value="QRIS">QRIS</option>
-        <option value="COD">COD</option>
-    </select>
+<label>Payment :</label>
 
-    <!-- QR CODE -->
-    <div id="qris-box" style="margin-top:15px; text-align:center;">
-        <p>Scan QR untuk pembayaran</p>
-        <img src="/UAS-DTW-Webny.cakeu/uploads/qris.png" style="width:200px; border-radius:10px;">
-    </div>
+<select name="payment" id="payment">
+<option value="QRIS">QRIS</option>
+<option value="COD">COD</option>
+</select>
 
-    <button class="btn" name="checkout">Bayar</button>
+<div id="qris-box" style="margin-top:15px; text-align:center;">
+<p>Scan QR untuk pembayaran</p>
+<img src="/UAS-DTW-Webny.cakeu/uploads/qris.png" style="width:200px;">
+</div>
+
+<button class="btn" name="checkout">Bayar</button>
 </form>
 
 </div>
@@ -103,13 +104,11 @@ foreach($_SESSION['cart'] as $id => $qty){
 const payment = document.getElementById("payment");
 const qrisBox = document.getElementById("qris-box");
 
-// AUTO LOAD
-window.addEventListener("load", function(){
-    qrisBox.style.display = payment.value === "QRIS" ? "block" : "none";
+window.addEventListener("load", () => {
+qrisBox.style.display = payment.value === "QRIS" ? "block" : "none";
 });
 
-// CHANGE
 payment.addEventListener("change", function(){
-    qrisBox.style.display = this.value === "QRIS" ? "block" : "none";
+qrisBox.style.display = this.value === "QRIS" ? "block" : "none";
 });
 </script>

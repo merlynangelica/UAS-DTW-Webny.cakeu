@@ -3,8 +3,13 @@ session_start();
 include '../config/database.php';
 include '../includes/navbar.php';
 
-// hanya ambil completed
-$q = mysqli_query($conn,"SELECT * FROM orders WHERE shipping_status='Completed' ORDER BY id DESC");
+$q = mysqli_query($conn,"
+SELECT orders.*, users.name 
+FROM orders
+JOIN users ON orders.user_id = users.id
+WHERE shipping_status='Delivered'
+ORDER BY orders.id DESC
+");
 ?>
 
 <h2 class="section-title">Order History</h2>
@@ -17,6 +22,8 @@ $q = mysqli_query($conn,"SELECT * FROM orders WHERE shipping_status='Completed' 
 
 <h3>Order <?= $o['id']; ?></h3>
 
+<p><b>Customer:</b> <?= $o['name']; ?></p>
+
 <p><b>Total:</b> Rp <?= number_format($o['total'],0,',','.'); ?></p>
 <p><b>Payment:</b> <?= $o['payment_method']; ?></p>
 <p><b>Alamat:</b> <?= $o['address']; ?></p>
@@ -24,8 +31,8 @@ $q = mysqli_query($conn,"SELECT * FROM orders WHERE shipping_status='Completed' 
     <p><b>Pesan:</b> <?= $o['message']; ?></p>
 <?php endif; ?>
 
-<p style="color:green; font-weight:bold;">
-Completed
+<p style="color:purple; font-weight:bold;">
+Delivered
 </p>
 
 </div>
